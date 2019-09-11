@@ -27,6 +27,7 @@ class Applications(db.Model):
        name = 'Nicole Duncan'
        credScore = 600
        new_app_object = Applications(name, credScore)
+       print("newappobjectline30     " + new_app_object)
        db.session.add(new_app_object)      
        db.session.commit()
 
@@ -62,47 +63,33 @@ def results():
       if request.method == 'POST':
       
             applicants = db.session.query(Applications).all()
+            print("this is applicants line 65   " + str(applicants))
     
-            counter = 1
+            
             loop_queries = []
             for objects in applicants:
                   loop_query = Blog.query.filter_by(credScore).first()
+                  print("this is loopo query line 70  " + loop_query)
                   if loop_query > score: 
                         print("eligible")
                   
 
-      return render_template('results.html', name=name, credScore=credScore)  
+      return render_template('results.html') 
 
-"""     
+@app.route('/altervar', methods=['POST', 'GET']) 
+def alterVar():
 
-@app.route('/display/<int:post_id>', methods=['POST', 'GET'])
-def display(post_id):
-
-      display_list = []
-
-      displayed_blog_object = Blog.query.filter_by(id=post_id).first()
-      display_list.append(displayed_blog_object)
-     
-      return render_template('blogdisplay.html', display_list=display_list)
-
+      return render_template('results.html')
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
-    blogs = db.session.query(Blog).all()
-    
-    counter = 1
-    loop_queries = []
-    for objects in blogs:
-      loop_query = Blog.query.filter_by(id=counter).first()
-      counter += 1
-      loop_queries.append(loop_query)
+   
     
     
-    return render_template('blog.html',loop_queries=loop_queries)
-  
-"""
+    return render_template('altervar.html')
 
 
 if __name__ == '__main__':
+    db.create_all()
     app.run()
