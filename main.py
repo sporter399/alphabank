@@ -23,11 +23,11 @@ class Applications(db.Model):
        self.name = name
        self.credScore = credScore
 
-
+def createDataBase():
        name = 'Nicole Duncan'
        credScore = 600
        new_app_object = Applications(name, credScore)
-       print("newappobjectline30     " + new_app_object)
+       print("newappobjectline30     " + str(new_app_object))
        db.session.add(new_app_object)      
        db.session.commit()
 
@@ -45,47 +45,41 @@ class Applications(db.Model):
 
        print("line 45")
 
+       return
+
+
+
 @app.route('/test', methods=['POST', 'GET'])
 def test():
 
-      if request.method == 'POST':
-       
-        score = request.form['score']
-     
-      return render_template('altervar.html',score="score")  
+            return render_template('altervar.html',score="Credit Score:")  
 
-
-    
 
 @app.route('/results', methods=['POST', 'GET'])
 def results():
 
       if request.method == 'POST':
-      
-            applicants = db.session.query(Applications).all()
-            print("this is applicants line 65   " + str(applicants))
-    
             
-            loop_queries = []
-            for objects in applicants:
-                  loop_query = Blog.query.filter_by(credScore).first()
-                  print("this is loopo query line 70  " + loop_query)
-                  if loop_query > score: 
+      
+            applicants = db.session.query(Applications).all()         
+            score = request.form['score']
+           
+            
+            for object in applicants:
+                  
+                  if object.credScore > int(score):
                         print("eligible")
                   
 
-      return render_template('results.html') 
+                 
+      return render_template('results.html', score="score") 
 
-@app.route('/altervar', methods=['POST', 'GET']) 
-def alterVar():
-
-      return render_template('results.html')
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
    
-    
+    createDataBase()
     
     return render_template('altervar.html')
 
