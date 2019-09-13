@@ -19,34 +19,38 @@ class Applications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     credScore = db.Column(db.Integer())
+    monthlyIncome = db.Column(db.Integer())
     eligible = db.Column(db.Boolean)
+    
    
     
-    def __init__(self, name, credScore):
+    def __init__(self, name, credScore, monthlyIncome):
        self.name = name
        self.credScore = credScore
+       self.monthlyIncome = monthlyIncome
        self.eligible = False
+       
 
 def createDataBase():
        name = 'Nicole Duncan'
        credScore = 600
-       
-       
-       
-       new_app_object = Applications(name, credScore)
+       monthlyIncome = 4000
+       new_app_object = Applications(name, credScore, monthlyIncome)
        print("newappobjectline30     " + str(new_app_object))
        db.session.add(new_app_object)      
        db.session.commit()
 
        name = 'Beth Burke'
        credScore = 700
-       new_app_object = Applications(name, credScore)
+       monthlyIncome = 2000
+       new_app_object = Applications(name, credScore, monthlyIncome)
        db.session.add(new_app_object)      
        db.session.commit()
 
        name = 'Derek Scott'
        credScore = 800
-       new_app_object = Applications(name, credScore)
+       monthlyIncome = 7000
+       new_app_object = Applications(name, credScore, monthlyIncome)
        db.session.add(new_app_object)      
        db.session.commit()
 
@@ -59,7 +63,7 @@ def createDataBase():
 @app.route('/test', methods=['POST', 'GET'])
 def test():
 
-            return render_template('altervar.html',score="Credit Score:")  
+            return render_template('altervar.html',score="Credit Score:", monthly_income="Monthly Income:")  
 
 
 @app.route('/results', methods=['POST', 'GET'])
@@ -70,16 +74,20 @@ def results():
       
             applicants = db.session.query(Applications).all()         
             score = request.form['score']
+            monthly_income = request.form['monthly_income']
            
             
             for object in applicants:
                   
-                  if object.credScore > int(score):
+                  if (object.credScore > int(score)) and (object.monthlyIncome > int(monthly_income)):
                         print("eligible")
+
+                  else:
+                        print("ineligible")
                   
 
                  
-      return render_template('results.html', score="score") 
+      return render_template('results.html', score="score", monthly_income="monthly_income") 
 
 
 @app.route('/', methods=['POST', 'GET'])
